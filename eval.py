@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 
-from tinyenc import TinySEANetEncoder
+from tinyseanet import TinySEANetEncoder
 
 class TempDataset(Dataset):
     def __init__(self, data_info, processor, sample_rate=24000, fixed_length=None):

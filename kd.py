@@ -7,7 +7,8 @@ from sklearn.model_selection import train_test_split
 import os
 from tqdm import tqdm
 from transformers import EncodecModel, AutoProcessor
-from tinyenc import TinySEANetEncoder
+
+from tinyseanet import TinySEANetEncoder
 
 # TODO
 # Add an STFT loss: distance between spectrograms
