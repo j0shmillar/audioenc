@@ -6,10 +6,7 @@ import warnings
 import numpy as np
 import typing as tp
 
-# Supported normalizations
 CONV_NORMALIZATIONS = {'none', 'weight_norm', 'spectral_norm', 'layer_norm', 'time_group_norm'}
-
-# -- Helper functions --
 
 def pad1d(x, pad, mode='reflect'):
     return nn.functional.pad(x, pad, mode=mode)
@@ -20,8 +17,6 @@ def get_extra_padding_for_conv1d(x, kernel_size, stride, padding_total):
     needed_len = (output_len - 1) * stride + kernel_size - padding_total
     extra = needed_len - T
     return max(extra, 0)
-
-# -- Normalization wrapper functions --
 
 def apply_parametrization_norm(module: nn.Module, norm: str = 'none') -> nn.Module:
     if norm == 'weight_norm':
@@ -49,8 +44,6 @@ class ConvLayerNorm(nn.Module):
     def forward(self, x):
         # Convert [B, C, T] -> [B, T, C] for LayerNorm, then back
         return self.ln(x.permute(0, 2, 1)).permute(0, 2, 1)
-
-# -- Building blocks --
 
 class NormConv1d(nn.Module):
     def __init__(self, *args, causal: bool = False, norm: str = 'none',
@@ -129,8 +122,6 @@ class SLSTM(nn.Module):
             y = y + x
         return y.permute(1, 2, 0)
 
-# -- Tiny SEANet Encoder --
-
 class SEANetEncoder(nn.Module):
     def __init__(self, channels=1, dimension=128, n_filters=32, n_residual_layers=1,
                  ratios=[8, 5, 4, 2], activation='ELU', activation_params={'alpha': 1.0},
@@ -180,7 +171,6 @@ class SEANetEncoder(nn.Module):
         x = self.model(x)
         x = self.proj(x)
         
-        # During training use straight-through estimator
         if self.training:
             x_hard = torch.round(torch.sigmoid(x) * (self.codebook_size - 1))
             # Straight-through trick: forward is discretized but backward is continuous
